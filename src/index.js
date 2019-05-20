@@ -71,9 +71,9 @@ window.TurbolinksAnimate = window.TurbolinksAnimate || new function() {
     {name: 'slideInRight', disappear: 'slideOutRight', reverse: 'slideInLeft'},
     {name: 'slideOutRight', disappear: true, reverse: 'slideOutLeft'}
   ];
-  let array = [];
-  this.animations.forEach((animation) => array.push(animation.name));
-  this.animateClasses = array;
+  let arr = [];
+  this.animations.forEach((animation) => arr.push(animation.name));
+  this.animateClasses = arr;
 
   this.init = (options) => {
     let defaults = {
@@ -91,55 +91,55 @@ window.TurbolinksAnimate = window.TurbolinksAnimate || new function() {
     };
     options = extend({}, defaults, options);
 
-    TurbolinksAnimate.element = options.element;
-    TurbolinksAnimate.setOptions(options);
+    window.TurbolinksAnimate.element = options.element;
+    window.TurbolinksAnimate.setOptions(options);
     if ('scrollRestoration' in history)
       history.scrollRestoration = 'manual';
 
-    if (TurbolinksAnimate.initialized == false && options.customListeners == false) {
+    if (window.TurbolinksAnimate.initialized == false && options.customListeners == false) {
       document.addEventListener('turbolinks:request-start', () => {
-        TurbolinksAnimate.disappear();
+        window.TurbolinksAnimate.disappear();
       });
       window.addEventListener('popstate', () => {
-        TurbolinksAnimate.disappear();
+        window.TurbolinksAnimate.disappear();
       });
       let ignoreBeforeunload = false;
       document.querySelectorAll('a[href^=mailto]').forEach((element) => element.addEventListener('click', () => ignoreBeforeunload = true));
       window.addEventListener('beforeunload', () => {
         if (!ignoreBeforeunload)
-          TurbolinksAnimate.disappear();
+          window.TurbolinksAnimate.disappear();
         ignoreBeforeunload = false;
       });
       document.addEventListener('turbolinks:before-render', (event) => {
-        TurbolinksAnimate.prepareTransition(event.data.newBody);
+        window.TurbolinksAnimate.prepareTransition(event.data.newBody);
       });
       document.addEventListener('turbolinks:render', () => {
-        TurbolinksAnimate.transition();
+        window.TurbolinksAnimate.transition();
       });
     }
 
     document.querySelectorAll('a, button').forEach((element) => {
       element.addEventListener('click', () => {
         if (typeof element.dataset.turbolinksAnimateAnimation !== 'undefined')
-          TurbolinksAnimate.inline = true;
-        TurbolinksAnimate.options.animation = element.dataset.turbolinksAnimateAnimation || options.animation;
-        TurbolinksAnimate.options.appear = element.dataset.turbolinksAnimateAppear;
-        TurbolinksAnimate.options.duration = element.dataset.turbolinksAnimateDuration || options.duration;
-        TurbolinksAnimate.options.delay = element.dataset.turbolinksAnimateDelay || options.delay;
-        TurbolinksAnimate.options.type = element.dataset.turbolinksAnimateType;
+          window.TurbolinksAnimate.inline = true;
+        window.TurbolinksAnimate.options.animation = element.dataset.turbolinksAnimateAnimation || options.animation;
+        window.TurbolinksAnimate.options.appear = element.dataset.turbolinksAnimateAppear;
+        window.TurbolinksAnimate.options.duration = element.dataset.turbolinksAnimateDuration || options.duration;
+        window.TurbolinksAnimate.options.delay = element.dataset.turbolinksAnimateDelay || options.delay;
+        window.TurbolinksAnimate.options.type = element.dataset.turbolinksAnimateType;
       });
     });
 
-    TurbolinksAnimate.initialized = true;
+    window.TurbolinksAnimate.initialized = true;
     if (options.customListeners == false)
-      TurbolinksAnimate.appear();
+      window.TurbolinksAnimate.appear();
   };
 
   this.setOptions = (options) => {
-    let previousType = TurbolinksAnimate.options.type,
-      appear = TurbolinksAnimate.options.appear;
+    let previousType = window.TurbolinksAnimate.options.type,
+      appear = window.TurbolinksAnimate.options.appear;
 
-    TurbolinksAnimate.options = {
+    window.TurbolinksAnimate.options = {
       animation: options.animation,
       duration: options.duration,
       delay: options.delay,
@@ -182,29 +182,29 @@ window.TurbolinksAnimate = window.TurbolinksAnimate || new function() {
   };
 
   this.appear = () => {
-    TurbolinksAnimate.disappearing = false;
-    TurbolinksAnimate.toggle();
+    window.TurbolinksAnimate.disappearing = false;
+    window.TurbolinksAnimate.toggle();
   };
   this.disappear = () => {
-    TurbolinksAnimate.disappearing = true;
-    TurbolinksAnimate.toggle();
+    window.TurbolinksAnimate.disappearing = true;
+    window.TurbolinksAnimate.toggle();
   };
   this.toggle = () => {
-    if (TurbolinksAnimate.options.animation != 'false') {
-      TurbolinksAnimate.resetClasses();
-      TurbolinksAnimate.getElements();
-      TurbolinksAnimate.useOptions();
-      Turbolinks.clearCache();
-      TurbolinksAnimate.animate();
-      TurbolinksAnimate.reset();
+    if (window.TurbolinksAnimate.options.animation != 'false') {
+      window.TurbolinksAnimate.resetClasses();
+      window.TurbolinksAnimate.getElements();
+      window.TurbolinksAnimate.useOptions();
+      window.Turbolinks.clearCache();
+      window.TurbolinksAnimate.animate();
+      window.TurbolinksAnimate.reset();
     }
   };
 
   this.getElements = () => {
-    TurbolinksAnimate.elements = [];
+    window.TurbolinksAnimate.elements = [];
 
     function getChildren(parent) {
-      let type = TurbolinksAnimate.options.type || TurbolinksAnimate.options.previousType || 'true';
+      let type = window.TurbolinksAnimate.options.type || window.TurbolinksAnimate.options.previousType || 'true';
       if (parent.dataset.turbolinksAnimatePersist == type) {
         return;
       } else if (parent.dataset.turbolinksAnimatePersistItself == type || parent.querySelectorAll('[data-turbolinks-animate-persist]').length > 0 || parent.querySelectorAll('[data-turbolinks-animate-persist-itself]').length > 0) {
@@ -213,72 +213,72 @@ window.TurbolinksAnimate = window.TurbolinksAnimate || new function() {
           getChildren(children[i]);
         }
       } else {
-        TurbolinksAnimate.elements.push(parent);
+        window.TurbolinksAnimate.elements.push(parent);
       }
     }
 
-    getChildren(TurbolinksAnimate.element);
+    getChildren(window.TurbolinksAnimate.element);
   };
   this.useOptions = () => {
-    if (TurbolinksAnimate.elements != null) {
-      TurbolinksAnimate.elements.forEach((element) => {
-        element.style.animationDuration = TurbolinksAnimate.options.duration;
-        if (TurbolinksAnimate.options.delay != false)
-          element.style.animationDelay = TurbolinksAnimate.options.delay;
+    if (window.TurbolinksAnimate.elements != null) {
+      window.TurbolinksAnimate.elements.forEach((element) => {
+        element.style.animationDuration = window.TurbolinksAnimate.options.duration;
+        if (window.TurbolinksAnimate.options.delay != false)
+          element.style.animationDelay = window.TurbolinksAnimate.options.delay;
       });
     }
   };
 
   this.reset = () => {
-    delete TurbolinksAnimate.options.appear;
-    delete TurbolinksAnimate.options.previousType;
-    TurbolinksAnimate.inline = false;
+    delete window.TurbolinksAnimate.options.appear;
+    delete window.TurbolinksAnimate.options.previousType;
+    window.TurbolinksAnimate.inline = false;
   };
   this.resetClasses = () => {
-    if (TurbolinksAnimate.elements != null) {
-      TurbolinksAnimate.elements.forEach((element) => {
-        TurbolinksAnimate.animateClasses.forEach((animation) => element.classList.remove(animation));
+    if (window.TurbolinksAnimate.elements != null) {
+      window.TurbolinksAnimate.elements.forEach((element) => {
+        window.TurbolinksAnimate.animateClasses.forEach((animation) => element.classList.remove(animation));
       });
     }
   };
 
   this.animate = () => {
-    let animation = TurbolinksAnimate.getAnimation();
+    let animation = window.TurbolinksAnimate.getAnimation();
 
-    TurbolinksAnimate.element.addEventListener('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', (event) => {
+    window.TurbolinksAnimate.element.addEventListener('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', (event) => {
       if (event.currentTarget.dataset.triggered)
         return;
       event.currentTarget.dataset.triggered = true;
 
-      dispatchEvent('turbolinks:animation-end', {detail: {element: TurbolinksAnimate.element, disappearing: TurbolinksAnimate.disappearing}});
+      dispatchEvent('turbolinks:animation-end', {detail: {element: window.TurbolinksAnimate.element, disappearing: window.TurbolinksAnimate.disappearing}});
     });
 
-    dispatchEvent('turbolinks:animation-start', {detail: {element: TurbolinksAnimate.element, disappearing: TurbolinksAnimate.disappearing, animation: animation}});
+    dispatchEvent('turbolinks:animation-start', {detail: {element: window.TurbolinksAnimate.element, disappearing: window.TurbolinksAnimate.disappearing, animation: animation}});
 
-    TurbolinksAnimate.elements.forEach((element) => {
+    window.TurbolinksAnimate.elements.forEach((element) => {
       element.addEventListener('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', () => {
         if (event.currentTarget.dataset.triggered)
           return;
         event.currentTarget.dataset.triggered = true;
         setTimeout(() => {
-          if (TurbolinksAnimate.disappearing == false)
-            TurbolinksAnimate.resetClasses();
+          if (window.TurbolinksAnimate.disappearing == false)
+            window.TurbolinksAnimate.resetClasses();
         }, 250);
       });
-      TurbolinksAnimate.getClassListFor(animation).forEach((animation) => element.classList.add(animation));
+      window.TurbolinksAnimate.getClassListFor(animation).forEach((animation) => element.classList.add(animation));
     });
   };
   this.getAnimation = () => {
     let animation;
 
-    if (!TurbolinksAnimate.disappearing)
-      animation = TurbolinksAnimate.options.appear;
-    if (TurbolinksAnimate.inline) {
-      animation = TurbolinksAnimate.options.animation;
-    } else if (typeof TurbolinksAnimate.element.dataset.turbolinksAnimateAnimation !== 'undefined') {
-      animation = TurbolinksAnimate.element.dataset.turbolinksAnimateAnimation;
+    if (!window.TurbolinksAnimate.disappearing)
+      animation = window.TurbolinksAnimate.options.appear;
+    if (window.TurbolinksAnimate.inline) {
+      animation = window.TurbolinksAnimate.options.animation;
+    } else if (typeof window.TurbolinksAnimate.element.dataset.turbolinksAnimateAnimation !== 'undefined') {
+      animation = window.TurbolinksAnimate.element.dataset.turbolinksAnimateAnimation;
     } else {
-      animation = TurbolinksAnimate.options.animation;
+      animation = window.TurbolinksAnimate.options.animation;
     }
 
     return animation;
@@ -288,7 +288,7 @@ window.TurbolinksAnimate = window.TurbolinksAnimate || new function() {
       browserWidth = window.innerWidth,
       animation = null;
 
-    let breakpoints = TurbolinksAnimate.options.breakpoints.sort((a, b) => {
+    let breakpoints = window.TurbolinksAnimate.options.breakpoints.sort((a, b) => {
       return b.width - a.width;
     });
     breakpoints.forEach((k, breakpoint) => {
@@ -298,11 +298,11 @@ window.TurbolinksAnimate = window.TurbolinksAnimate || new function() {
     if (animation == null)
       animation = animations;
 
-    animation = TurbolinksAnimate.animations.filter(object => object.name.toLowerCase() == animation.toLowerCase())[0];
-    if (TurbolinksAnimate.disappearing) {
+    animation = window.TurbolinksAnimate.animations.filter(object => object.name.toLowerCase() == animation.toLowerCase())[0];
+    if (window.TurbolinksAnimate.disappearing) {
       if (animation.disappear != true)
-        animation = TurbolinksAnimate.animations.filter(object => object.name.toLowerCase() == animation.disappear.toLowerCase())[0];
-      if (TurbolinksAnimate.options.reversedDisappearing && animation.reverse != null) {
+        animation = window.TurbolinksAnimate.animations.filter(object => object.name.toLowerCase() == animation.disappear.toLowerCase())[0];
+      if (window.TurbolinksAnimate.options.reversedDisappearing && animation.reverse != null) {
         classList.push(animation.reverse);
       } else {
         classList.push(animation.name);
